@@ -1,0 +1,20 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage[l2tabu,orthodox]{nag}
+\usepackage{xspace}
+\usepackage{fixltx2e}
+\usepackage{tabto}
+\usepackage[strict=true]{csquotes}
+\usepackage{bytefield}
+\usepackage[colorlinks=true]{hyperref}
+\title{Assignment 2: Link State Routing}
+\author{Yijun Fang(z5061743)}
+\date{Oct 19,2016}
+\begin{document}
+\maketitle
+\section{Program Design}
+This program use python2.7. This program uses Dijkstra algorithm to find the shortest path between two nodes in the network every 30 second and print out the path. I used dictionary to store all the information about the whole network. In the other words, I use a large dictionary to represent the graph that has been used to do the dijkstra. The way I used to reduce the unnecessary broadcast is by adding a condition to check before doing broadcast. When the data been broadcasted to it's neighbor, neighbor will also receive the port, so what I do, is just add condition to avoid those messages send back to the origin. If the data contains information about a node, then this information is definitely send from this node and so will not be send back to it again. And the broadcasting action is done periodically (every 1 second).  And the link state packet format I used is string. Just do some string processing to pack them when sending and unpack when receiving it. 
+\section{Handle Node Failure}
+To handle the case that node failed, I use the heartbeat method that mentioned in spec. The program send the check message each second to all its neighbors by sending a string that start with "1", and try to receive any same type of heartbeat from its neighbor. If the difference between the number of heartbeat sending to a particular port number and the number of heartbeat recevied from this port number, then determine this neighbor has been killed. Then I update the graph (remove all occurrence of this node, ie as a source or as a dest) and all other helper dictionary by removing this node. 
+\section{Possible improvement}
+When one node failed, my program will update the graph by using delete this node in graph. It's a little bit messy. The better way to do that may been draw a Minimum spanning tree using Dijkstra. In my test my program has the same output with the spec mentioned.
+\end{document}
